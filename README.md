@@ -12,10 +12,19 @@ A simple old-school example of a fire simulation. Written in C++ and C.
 
 ## Building
 
-  - Run cmake with `cmake.sh`
+  1. To build the _SMFL sample_ (which runs on the command line and uses CMake)
 
+  - Open a terminal on the root of the repo
+  - Run cmake command with `./cmake.sh`
   - `cd build && make -j 4`
 
+  2. To build the actual demo, you will need Qt (5.15 on my laptop currently). This is built by qmake
+
+  - Open the project under `firehose/firehose.pro`
+  - compile
+ 
 ## Running
 
   To run the SMFL sample, `cd build && ./fire_simulation`
+
+  To run the Qt sample, simply press F5 from QtCreator

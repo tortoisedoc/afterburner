@@ -4,7 +4,7 @@ A simple old-school example of a fire simulation. Written in C++ and C.
 
 ## Requirements
 
-  A Linux w/build-essential (gcc) OR git bash shell + relevant MINGW compilers
+  A Linux w/build-essential (gcc) OR git bash shell + relevant MINGW compilers, as well as Qt (5.15 on my setup)
 
   To build the cmd line testing tool:
 

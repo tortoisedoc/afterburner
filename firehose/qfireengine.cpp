@@ -23,9 +23,8 @@ protected:
         //Take care of resizing the engine if the FBO is resized
         if (m_fireEngine)
             delete m_fireEngine;
+        //FBO is managed by Qt
         m_fireEngine = new FireEngine(size.width(), size.height());
-        if (m_fbObj)
-            delete m_fbObj;
         m_fbObj = new QOpenGLFramebufferObject(size, format);
         m_pixels.resize(size.width()*size.height());
         m_pixelsNew.resize(size.width()*size.height());
@@ -46,6 +45,7 @@ protected:
         //This is a bit simple, and could be optimized. But for now will do!
         m_pixels = m_pixelsNew;
 
+        //Very simple old-school OpenGL way of blasting out a texture. First thing that comes to mind, really, and straightforward.
         glBindTexture (GL_TEXTURE_2D, m_fbObj->texture());
         glEnable(GL_TEXTURE_2D);
         //Lets use the simple texture we get from the fb object kthxbye
@@ -60,6 +60,7 @@ protected:
         glTexCoord2f (0, m_size.height());
         glVertex2f (0, m_size.height());
         glEnd();
+        //Again please
         update();
     }
     ~QFireEngineRenderer (){

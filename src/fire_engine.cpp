@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define RANDOM_RED_YELLOW_PIXEL \
-  0xFF << 24 | ((((unsigned char)(rand() % 256 + 1)) << 0))
+#define RANDOM_IN_RANGE(_min,_max) \
+    (rand() % (_max + 1 - _min) + _min)
+
+#define RANDOM_RED_YELLOW_PIXEL(__min,__max) \
+0xFF << 24 | ((((unsigned char)RANDOM_IN_RANGE(__min,__max)) << 0))
 //  0xFF << 24 | ((((unsigned char)(rand() % 256 + 1)) << 16) | (((unsigned char)(rand() % 256 + 1)) << 8))
 
 #define MAX_ALPHA 255
@@ -109,7 +112,7 @@ void FireEngine::Ignite(unsigned int * pixels, int verticalOffset) {
   //Generate random pixels at the bottom
   for (int y = verticalOffset; y < m_height; y++) {
     for (int x = 0; x < m_width; x ++) {
-      pixels[x + y*m_width] = RANDOM_RED_YELLOW_PIXEL;
+      pixels[x + y*m_width] = RANDOM_RED_YELLOW_PIXEL(100, 256);
     }
   }
 }

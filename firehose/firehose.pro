@@ -8,6 +8,7 @@ SOURCES += ../src/fire_engine.cpp \
     qfireengine.cpp
 
 DISTFILES += \
+    LabeledSlider.qml \
     main.qml
 
 RESOURCES += \

@@ -10,6 +10,10 @@ public:
   FireEngine(int width, int height);
   ~FireEngine();
   /**
+    feeds the fire with new combustion at the bottom
+  */
+  void Ignite(unsigned int *pixels, int verticalOffset, unsigned char chRed, unsigned char chGreen, unsigned char chBlue, unsigned char intensity);
+  /**
      makes the fire "burn"
   */
   void Burn(unsigned int *pixels, unsigned int *pixelsOut, int nrPasses, int fading);
@@ -17,8 +21,4 @@ public:
     grows the flames
   */
   void Scroll(unsigned int *pixels, int verticalOffset);
-  /**
-    feeds the fire with new combustion at the bottom
-  */
-  void Ignite(unsigned int *pixels, int verticalOffset);
 };

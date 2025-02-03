@@ -57,9 +57,6 @@ void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPas
     return;
   }
 
-  int sum = 0;
-  int count = 0;
-
   for (int pass = 0; pass < nrPasses; pass++) {
     // If we proceed from bottom to top, we wont get the right intensity -
     //   we have have to go by line!
@@ -102,17 +99,21 @@ void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPas
           | (CLIP_ACCUMULATOR ((short)sumb, count, fading) << 16);
 
         //Back to pixel it is!
-        pixelsOut[x+y*m_width] = newValue | 0xFF000000;
+        pixelsOut[x+y*m_width] = newValue | (pixels[x+y*m_width] & 0xFF000000);
       }
     }
   }
 }
 
-void FireEngine::Ignite(unsigned int * pixels, int verticalOffset) {
+void FireEngine::Ignite(unsigned int * pixels, int verticalOffset,
+  unsigned char chRed, unsigned char chGreen, unsigned char chBlue, unsigned char intensity) {
   //Generate random pixels at the bottom
   for (int y = verticalOffset; y < m_height; y++) {
     for (int x = 0; x < m_width; x ++) {
-      pixels[x + y*m_width] = RANDOM_RED_YELLOW_PIXEL(100, 256);
+      pixels[x + y*m_width] = ((unsigned char) intensity) << 24
+       | ((((unsigned char)RANDOM_IN_RANGE(chRed/2,chRed)) << 0))
+       | ((((unsigned char)RANDOM_IN_RANGE(chGreen/2,chGreen)) << 8))
+       | ((((unsigned char)RANDOM_IN_RANGE(chBlue/2,chBlue)) << 16));
     }
   }
 }

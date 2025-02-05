@@ -4,11 +4,14 @@ A simple old-school example of a fire simulation. Written in C++ and C.
 
 ## Requirements
 
-  A Linux w/build-essential (gcc) OR git bash shell + relevant MINGW compilers, as well as Qt (5.15 on my setup)
+  - A Linux w/build-essential (gcc) OR git bash shell + relevant MINGW compilers, as well as Qt
+(5.15 on my setup)
+
+  - OpenCV development libraries, on debian `apt-get install -y libopencv-dev`
 
   To build the cmd line testing tool:
 
-  - SFML - on debian, install via `apt-get libsfml-dev`
+  - SFML - on debian, install via `apt-get install -y libsfml-dev`
 
 ## Building
 

@@ -22,6 +22,7 @@ int main() {
     //Stack should not overflow with SD just yet..
     std::vector<unsigned int> pixels(NUM_PIXELS);
     std::vector<unsigned int> newPixels(NUM_PIXELS);
+    std::vector<unsigned int> processedPixels(NUM_PIXELS);
 
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Fire Simulation");
     FireEngine * engine = new FireEngine (WIDTH, HEIGHT);
@@ -30,7 +31,7 @@ int main() {
     sf::Sprite sprite;
     sprite.setTexture(fireTexture);
     while (window.isOpen()) {
-        std::cout << ".";
+        LOG(".");
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -39,12 +40,20 @@ int main() {
         }
 
         engine->Scroll(&pixels[0], 1);
-        engine->Ignite(&pixels[0], HEIGHT - 1);
+        engine->Ignite(&pixels[0], HEIGHT - 1, 255, 0, 0, 255);
         engine->Burn(&pixels[0], &newPixels[0], 1, 1);
-
+        memcpy(&pixels[0], &newPixels[0], NUM_PIXELS*4);
+#define WOBBLE
+#ifdef WOBBLE
+        //ZZap the new pixels to avoid mirroring
+        memset(&processedPixels[0], 0, NUM_PIXELS);
+        engine->Wobble(&newPixels[0], &processedPixels[0], 180.0/(float)WIDTH);
+        // Draw the fire as texture via a sprite; load in bytes
+        fireTexture.update((sf::Uint8*)&processedPixels[0]);
+#else
         // Draw the fire as texture via a sprite; load in bytes
         fireTexture.update((sf::Uint8*)&newPixels[0]);
-        memcpy(&pixels[0], &newPixels[0], NUM_PIXELS*4);
+#endif
 
         window.clear();
         window.draw(sprite);

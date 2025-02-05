@@ -7,7 +7,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 //#include <opencv2/core/mat.hpp>
 
-#define WOBBLE_AMPLITUDE 40
+#define WOBBLE_AMPLITUDE 10
 #define RANDOM_IN_RANGE(_min,_max) \
     (rand() % (_max + 1 - _min) + _min)
 
@@ -37,16 +37,22 @@ FireEngine::FireEngine(int width, int height) {
 
 
 //Clips a channel accumulator by calculating the average (out of the collected values) and applying an offset (fading)
-unsigned char CLIP_ACCUMULATOR(short sumc, int countc, int fadingc) {
+unsigned char CLIP_ACCUMULATOR(short sumc, int countc, int intensity, int fadingc) {
     LOG(std::hex << sumc)
-    sumc = (sumc / countc) - fadingc;
+    //int angle = (int)RANDOM_IN_RANGE(0, 360);
+    float sinValue = 0;
+    if (sumc  != 0)
+        sinValue = WOBBLE_AMPLITUDE*sin((128 - intensity)*M_PI/180);
+    if (sinValue <0)
+        sinValue = 0;
+    sumc = (sumc / countc) + sinValue - fadingc;
     if (sumc < 0)
         sumc = 0;
     LOG("- " << std::hex <<sumc)
     return (unsigned char)(sumc & 0xFF);
 }
 
-void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPasses, int fading){
+void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPasses, int intensity, int fading){
     if (!pixels || !pixelsOut) {
         LOG(" smooth : check parameters?");
         return;
@@ -89,9 +95,9 @@ void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPas
                 }
                 LOG(std::hex << sumr << "/" << sumg << "/" <<sumb << "\n");
 
-                unsigned int newValue = CLIP_ACCUMULATOR((short)sumr, count, fading)
-                    | (CLIP_ACCUMULATOR ((short)sumg, count, fading) << 8)
-                    | (CLIP_ACCUMULATOR ((short)sumb, count, fading) << 16);
+                unsigned int newValue = CLIP_ACCUMULATOR((short)sumr, count, intensity, fading)
+                    | (CLIP_ACCUMULATOR ((short)sumg, count, intensity, fading) << 8)
+                    | (CLIP_ACCUMULATOR ((short)sumb, count, intensity, fading) << 16);
                 //Back to pixel it is!
                 pixelsOut[x+y*m_width] = newValue | (pixels[x+y*m_width] & 0xFF000000);
             }
@@ -122,7 +128,6 @@ void FireEngine::PostProcess(unsigned int *pixels, unsigned int *newPixels) {
     cv::Mat map_y(map_x.size(), map_x.type());
     cv::Mat src (map_x.size(), CV_32FC1, pixels); //Not deallocated
     cv::Mat dst (src.size(), src.type());
-    float sinValue = 0;
 
     for( int y = 0; y < map_x.rows; y++ ) {
         for( int x = 0; x < map_x.cols; x++ ) {

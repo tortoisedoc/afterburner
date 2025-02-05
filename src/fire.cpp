@@ -43,11 +43,11 @@ int main() {
         engine->Ignite(&pixels[0], HEIGHT - 1, 255, 0, 0, 255);
         engine->Burn(&pixels[0], &newPixels[0], 1, 1);
         memcpy(&pixels[0], &newPixels[0], NUM_PIXELS*4);
-#define WOBBLE
-#ifdef WOBBLE
+#define POSTPROCESS
+#ifdef POSTPROCESS
         //ZZap the new pixels to avoid mirroring
         memset(&processedPixels[0], 0, NUM_PIXELS);
-        engine->Wobble(&newPixels[0], &processedPixels[0], 180.0/(float)WIDTH);
+        engine->PostProcess(&newPixels[0], &processedPixels[0]);
         // Draw the fire as texture via a sprite; load in bytes
         fireTexture.update((sf::Uint8*)&processedPixels[0]);
 #else

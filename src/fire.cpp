@@ -41,7 +41,7 @@ int main() {
 
         engine->Scroll(&pixels[0], 1);
         engine->Ignite(&pixels[0], HEIGHT - 1, 255, 0, 0, 255);
-        engine->Burn(&pixels[0], &newPixels[0], 1, 1);
+        engine->Burn(&pixels[0], &newPixels[0], 1, 128, 1);
         memcpy(&pixels[0], &newPixels[0], NUM_PIXELS*4);
 #define POSTPROCESS
 #ifdef POSTPROCESS

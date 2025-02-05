@@ -11,6 +11,7 @@ class QFireEngine : public QQuickFramebufferObject
     Q_PROPERTY(unsigned char redChannel READ getChannelRed WRITE setChannelRed NOTIFY redChannelChanged)
     Q_PROPERTY(unsigned char greenChannel READ getChannelGreen WRITE setChannelGreen NOTIFY greenChannelChanged)
     Q_PROPERTY(unsigned char blueChannel READ getChannelBlue WRITE setChannelBlue NOTIFY blueChannelChanged)
+    Q_PROPERTY(bool upsideDown READ getUpsideDown WRITE setUpsideDown NOTIFY upsideDownChanged)
 
 public:
     QFireEngine();
@@ -55,11 +56,22 @@ public:
         update();
     }
 
+    unsigned char getUpsideDown() {
+        return m_upsideDown;
+    }
+
+    void setUpsideDown(unsigned char value) {
+        m_upsideDown = value;
+        emit upsideDownChanged();
+        update();
+    }
+
 signals:
     void intensityChanged();
     void redChannelChanged();
     void greenChannelChanged();
     void blueChannelChanged();
+    void upsideDownChanged();
 protected:
     QQuickFramebufferObject::Renderer *createRenderer() const override;
 private:
@@ -67,4 +79,5 @@ private:
     unsigned char m_channelRed;
     unsigned char m_channelGreen;
     unsigned char m_channelBlue;
+    bool m_upsideDown;
 };

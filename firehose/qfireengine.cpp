@@ -63,7 +63,7 @@ protected:
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         m_fireEngine->Scroll(&m_pixels[0], 1);
         m_fireEngine->Ignite(&m_pixels[0], m_size.height() - 1, m_channelRed, m_channelGreen, m_channelBlue, m_intensity);
-        m_fireEngine->Burn(&m_pixels[0], &m_pixelsNew[0], 1, 1);
+        m_fireEngine->Burn(&m_pixels[0], &m_pixelsNew[0], 1, m_intensity, 1);
         if (m_upsideDown)
             m_fireEngine->PostProcess(&m_pixelsNew[0], &m_pixelsPostProcessed[0]);
         //This is a bit simple, and could be optimized. But for now will do!

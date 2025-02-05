@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <opencv4/opencv2/opencv.hpp>
+//#include <opencv2/core/mat.hpp>
+
+#define WOBBLE_AMPLITUDE 40
 #define RANDOM_IN_RANGE(_min,_max) \
     (rand() % (_max + 1 - _min) + _min)
 
@@ -14,19 +18,11 @@
 #define MAX_SMOOTH_PIXELS 1000
 #define SMOOTH_COLOR_MAX 64
 
-//Add logging flag to cmake for logging
-#ifdef LOGGING
-#define LOG(cmd)\
-  std::cout << cmd
-#else
-#define LOG(cmd)
-#endif
-
 //Accumulates from 8-bit to 16-bits; can overflow as it should
 #define ACCUMULATE_RGB(sumrm,sumgm,sumbm,pixel)\
-  sumrm+=pixel & 0xFF;\
-  sumgm+=(pixel >> 8) & 0xFF;\
-  sumbm+=(pixel >> 16) & 0xFF;
+    sumrm+=pixel & 0xFF;\
+    sumgm+=(pixel >> 8) & 0xFF;\
+    sumbm+=(pixel >> 16) & 0xFF;
 
 // Ancient knowledge from the dawn of time lights the way
 // Fire logic with added cooling map!
@@ -52,8 +48,8 @@ unsigned char CLIP_ACCUMULATOR(short sumc, int countc, int fadingc) {
 
 void FireEngine::Burn(unsigned int * pixels, unsigned int * pixelsOut, int nrPasses, int fading){
     if (!pixels || !pixelsOut) {
-       LOG(" smooth : check parameters?");
-       return;
+        LOG(" smooth : check parameters?");
+        return;
     }
 
     for (int pass = 0; pass < nrPasses; pass++) {
@@ -118,6 +114,27 @@ void FireEngine::Ignite(unsigned int * pixels, int verticalOffset,
 
 void FireEngine::Scroll(unsigned int *pixels, int verticalOffset) {
     memcpy(pixels, pixels + verticalOffset*m_width, (m_height - verticalOffset)*m_width*4);
+}
+
+void FireEngine::PostProcess(unsigned int *pixels, unsigned int *newPixels) {
+
+    cv::Mat map_x(m_height, m_width, CV_32FC1);
+    cv::Mat map_y(map_x.size(), map_x.type());
+    cv::Mat src (map_x.size(), CV_32FC1, pixels); //Not deallocated
+    cv::Mat dst (src.size(), src.type());
+    float sinValue = 0;
+
+    for( int y = 0; y < map_x.rows; y++ ) {
+        for( int x = 0; x < map_x.cols; x++ ) {
+            //Heads down for testing
+            float val = (map_y.rows - y);
+            map_x.at<float>(y, x) = (float)x;
+            map_y.at<float>(y, x) =  (float)val;
+//                printf("new val %d -> %f, cols %d rows %d\n", y, val, map_x.cols, map_x.rows);
+        }
+    }
+    cv::remap(src, dst, map_x, map_y, cv::INTER_CUBIC, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0) );
+    memcpy(newPixels, dst.data, m_width*m_height*4);
 }
 
 FireEngine::~FireEngine() {

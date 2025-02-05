@@ -43,6 +43,9 @@ ApplicationWindow {
             value : 0.0
             label: "Blue Channel"
         }
+        CheckBox {
+            id: upsideDown
+        }
 
         Rectangle {
             width: parent.width
@@ -56,6 +59,7 @@ ApplicationWindow {
                 greenChannel: greenChannel.value
                 blueChannel: blueChannel.value
                 intensity: fireIntensity.value
+                upsideDown: upsideDown.checked
             }
         }
         //Apparently having the other QQuickItems here breaks the rendering (Qt 5.15, intel CPU / Integrated graphics)

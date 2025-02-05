@@ -19,7 +19,7 @@ ApplicationWindow {
         LabeledSlider {
             id: fireIntensity
             width: parent.width
-            value: 255.0
+            value: 128.0
             label: "Fire intensity"
         }
 

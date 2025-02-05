@@ -9,9 +9,11 @@ project(FireSimulation)
 
 # Find SFML package
 find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+find_package(OpenCV REQUIRED COMPONENTS core imgproc)
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 # Add the executable
-add_executable(fire_simulation src/fire.cpp src/fire_engine.cpp)
+add_executable(test_fire_simulation src/fire.cpp src/fire_engine.cpp)
 
 # Link SFML libraries to the executable
-target_link_libraries(fire_simulation sfml-graphics sfml-window sfml-system)
+target_link_libraries(test_fire_simulation sfml-graphics sfml-window sfml-system opencv_core opencv_imgproc)

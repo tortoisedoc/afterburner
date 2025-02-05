@@ -27,7 +27,7 @@ public:
   /**
     makes the fire "burn"
   */
-  void Burn(unsigned int *pixels, unsigned int *pixelsOut, int nrPasses, int fading);
+  void Burn(unsigned int *pixels, unsigned int *pixelsOut, int nrPasses, int intensity, int fading);
   /**
     postprocess the fire
   */
